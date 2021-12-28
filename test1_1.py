@@ -22,7 +22,7 @@ import math
 import pydicom
 from PIL import Image
 import re
-import cv2
+#import cv2
 
 
 
