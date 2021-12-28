@@ -12,7 +12,7 @@ from PIL import Image
 import plotly.graph_objects as go
 import pathlib  # 標準ライブラリ
 #import openpyxl # 外部ライブラリ　
-import csv      # 標準ライブラリ
+#import csv      # 標準ライブラリ
 import glob
 import pandas as pd
 import os
@@ -27,7 +27,8 @@ import cv2
 
 
 with st.sidebar:
-    image = Image.open('C:\\Users\\koya\\Desktop\\vscord\\image\\rion.png')
+    #image = Image.open('C:\\Users\\koya\\Desktop\\vscord\\image\\rion.png')
+    image = Image.open('rion.png')
     st.image(image,width=120)
 
 
