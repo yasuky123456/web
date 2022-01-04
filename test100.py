@@ -12,7 +12,6 @@ from PIL import Image
 import plotly.graph_objects as go
 import pathlib  # 標準ライブラリ
 #import openpyxl # 外部ライブラリ　
-#import csv      # 標準ライブラリ
 import glob
 import pandas as pd
 import os
@@ -22,6 +21,7 @@ import math
 import pydicom
 from PIL import Image
 import re
+import csv      # 標準ライブラリ
 import cv2
 
 
