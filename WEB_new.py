@@ -1,3 +1,4 @@
+from pydicom import filebase
 import streamlit as st
 import pandas_datareader.data as web
 import pandas as pd
@@ -8,7 +9,7 @@ import calendar
 #import csv
 import matplotlib.pyplot as plt
 import plotly.express as px
-from PIL import Image
+from PIL import Image, ImageDraw
 import plotly.graph_objects as go
 import pathlib  # 標準ライブラリ
 #import openpyxl # 外部ライブラリ　
@@ -19,7 +20,7 @@ from pathlib import Path
 import numpy as np
 import math
 import pydicom
-from PIL import Image, ImageDraw
+from PIL import Image
 import re
 import csv      # 標準ライブラリ
 import cv2
@@ -27,8 +28,8 @@ import cv2
 
 
 with st.sidebar:
-    #image = Image.open('C:\\Users\\koya\\Desktop\\vscord\\image\\rion.png')
-    image = Image.open('rion.png')
+    image = Image.open('C:\\Users\\koya\\Desktop\\vscord\\image\\rion.png')
+    #image = Image.open('rion.png')
     st.image(image,width=120)
 
 
@@ -172,7 +173,7 @@ if sideradio == 'Market information':
     if task == 'sp500':
     
         #if st.button('入力された銘柄のローソク足を表示する。'):
-            df_Security_code=web.DataReader('1655.JP', "stooq",D)
+            df_Security_code=web.DataReader('^SPX', "stooq",D)
             st.write('sp500','株価情報')
             st.dataframe(df_Security_code)
 
@@ -855,7 +856,7 @@ if sideradio == 'ライオン戦略/資産形成':
 
     if task == 'sp500':
         #sp500のデータ
-        ds = web.DataReader('1655.JP' , "stooq",A ,C )
+        ds = web.DataReader('^SPX' , "stooq",A ,C )
         pre_firstday_sp500 = ds.tail(1)
         pre_Allday_sp500 = ds.head(1)
         XX = pre_firstday_sp500.iloc[0, 3]
@@ -1034,7 +1035,7 @@ if sideradio == 'ライオン戦略/資産形成':
         Y = pre_Allday_NKX.iloc[0, 3]
         pre_NKX = my_sum(X, Y)
         #sp500
-        ds = web.DataReader('1655.JP' , "stooq",A ,C )
+        ds = web.DataReader('^SPX' , "stooq",A ,C )
         pre_firstday_sp500 = ds.tail(1)
         pre_Allday_sp500 = ds.head(1)
         XX = pre_firstday_sp500.iloc[0, 3]
@@ -1107,26 +1108,45 @@ if sideradio == 'MR':
     st.subheader('SNRを手計算でしている方必見!')
 
     
-    uploaded_files_1 = st.file_uploader("★DATA_1を選択！", accept_multiple_files=True)
+    uploaded_files_1 = st.file_uploader("★DATA_1を選択！最後のdataは2つ.", accept_multiple_files=True)
+    filebase_1 =[]
     datas_1 = []
     for uploaded_file_1 in uploaded_files_1:
+        filebase_1.append(uploaded_file_1)
         img_1 = pydicom.dcmread(uploaded_file_1)
         pixels_1 = img_1.pixel_array
         data_df_1 = pd.DataFrame(pixels_1)
         datas_1.append(data_df_1)
+    
+    #datas_1.append(datas_1[-1])
+    #filebase_1.append(filebase_1[-1])
     ##必要な時に書く
     #df_1 = pd.concat(datas_1,axis=0)
     #df_1 = df_1.astype("float64")
     #st.write(datas_1)
     #st.write(df_1)
+    st.write(filebase_1)
+    
 
-    uploaded_files_2 = st.file_uploader("★DATA_2を選択！", accept_multiple_files=True)
+    uploaded_files_2 = st.file_uploader("★DATA_2を選択！最後のdataは2つ.", accept_multiple_files=True)
+    filebase_2 =[]
     datas_2 = []
     for uploaded_file_2 in uploaded_files_2:
+        filebase_2.append(uploaded_file_2)
         img_2 = pydicom.dcmread(uploaded_file_2)
         pixels_2 = img_2.pixel_array
         data_df_2 = pd.DataFrame(pixels_2)
         datas_2.append(data_df_2)
+
+    #datas_2.append(datas_2[-1])
+    #filebase_2.append(filebase_2[-1])
+    ##必要な時に書く
+    #df_1 = p2.concat(datas_1,axis=0)
+    #df_1 = df_1.astype("float64")
+    #st.write(datas_1)
+    #st.write(df_1)
+    st.write(filebase_2)
+       
 
     #必要な時に書く
     #df_2 = pd.concat(datas_2,axis=0)
@@ -1139,8 +1159,8 @@ if sideradio == 'MR':
     if st.button('ROI設定とSNR結果一覧'):
 
         z_pixcel =int(math.sqrt(z))
-            #st.write("imageJのROIピクセル数入力:"+str(z))
-            #st.write("ROI設定:画像の中心とした正方形" + str(z_pixcel) + "*"+ str(z_pixcel) + "領域")
+        #st.write("imageJのROIピクセル数入力:"+str(z))
+        #st.write("ROI設定:画像の中心とした正方形" + str(z_pixcel) + "*"+ str(z_pixcel) + "領域")
             #ROI設定
         i = int(z_pixcel / 2)
             #中心座標127
@@ -1151,14 +1171,15 @@ if sideradio == 'MR':
         #ax.imshow(pixels_1,cmap='gray')
         #ax.set_axis_off()
         #st.pyplot(fig)
-        #img_ROI = cv2.rectangle(pixels_1, (I,I), (II, II), (0, 0, 0), thickness=-1)
         img_ROI = cv2.rectangle(pixels_1, (I,I), (II, II), (0, 0, 0), thickness=-1)
-        draw.rectangle((200, 100, 300, 200), fill=(0, 192, 192), outline=(255, 255, 255))
 
-        
         ax.imshow(img_ROI,cmap='gray')
         ax.set_axis_off()
         st.pyplot(fig)
+
+        #最後のデータは別に処理
+        #datas_1.append(datas_1[-1])
+        #datas_2.append(datas_2[-1])
 
         #dataの結合
         df_1 = pd.concat(datas_1,axis=0)
@@ -1172,6 +1193,10 @@ if sideradio == 'MR':
         #インデックス設定
         df_1 = df_1.reset_index(drop=True)
         df_2 = df_2.reset_index(drop=True)
+        #st.write("df_1")
+        #st.write(df_1)
+        #st.write("df_2")
+        #st.write(df_2)
 
 
         DF = pd.concat([df_1,df_2])
@@ -1184,12 +1209,12 @@ if sideradio == 'MR':
         #読み込み全データの対応する組の各行の平均
         EPI_Ave_Signal = DF_sort.groupby(level=0).mean()
         #st.write("EPI_Ave_Signalの結果")
-        #st.write(EPI_Ave_Signal)
+        #st.write(EPI_Ave_Signal.describe())
         #差分
         EPI_subtra = df_1 - df_2
 
         #st.write("subtrea結果")
-        #st.write(EPI_subtra)
+        #st.write(EPI_subtra.describe())
 
 
         #範囲変数作成
@@ -1381,11 +1406,19 @@ if sideradio == 'MR':
         
         SNR_df = pd.DataFrame(SNR_list, columns = ['SNR'])
         SNR_dropna = SNR_df.dropna()
-       
+
+        #最終行の削除
+        SNR_df =SNR_dropna[:-1]
+        #st.write(SNR_df)
+
         
+
+       
+
+
         
         #SNRの平均
-        SNR_mean= SNR_dropna.mean()
+        SNR_mean= SNR_df.mean()
         SNR_mean_list =[SNR_mean]
 
         SNR_mean_list_df = pd.DataFrame(SNR_mean_list,index=['平均SNR'])
@@ -1412,8 +1445,12 @@ if sideradio == 'MR':
         #SNR_df = SNR_dropna.reset_index(drop=True)
         #st.write(SNR_df)
 
-        SNR_df = SNR_dropna.reset_index()
-        #st.write(SNR_df)
+        SNR_df = SNR_df.reset_index()
+
+
+
+
+
 
         SNR_meann = pd.DataFrame(SNR_mean_list, index=[9000])
 
