@@ -22,7 +22,7 @@ import math
 import pydicom
 from PIL import Image
 import re
-#import csv      # 標準ライブラリ
+import csv      # 標準ライブラリ
 import cv2
 
 
