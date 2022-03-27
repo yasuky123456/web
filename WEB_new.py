@@ -28,8 +28,8 @@ import cv2
 
 
 with st.sidebar:
-    image = Image.open('C:\\Users\\koya\\Desktop\\vscord\\image\\rion.png')
-    #image = Image.open('rion.png')
+    #image = Image.open('C:\\Users\\koya\\Desktop\\vscord\\image\\rion.png')
+    image = Image.open('rion.png')
     st.image(image,width=120)
 
 
